@@ -6,13 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <script src="./calculator.js" defer></script>
 </head>
 <body>
-    <script src="./calculator.js"></script>
     <div class='container'>
-       <div id='calc-base'>
-
-       </div> 
+        <div id='calc-base'>
+            <textarea id='calc-screen' 
+                readonly
+                placeholder="0"></textarea>
+            <div id='calc-btnbase'>
+                <div id='calc-numbtn'>
+                    <button class='btn' data-num='7'>7</button>
+                    <button class='btn' data-num='8'>8</button>
+                    <button class='btn' data-num='9'>9</button>
+                    <button class='btn' data-num='4'>4</button>
+                    <button class='btn' data-num='5'>5</button>
+                    <button class='btn' data-num='6'>6</button>
+                    <button class='btn' data-num='1'>1</button>
+                    <button class='btn' data-num='2'>2</button>
+                    <button class='btn' data-num='3'>3</button>
+                    <button class='btn' data-num='0'>0</button>
+                    <button class='btn' data-num=></button>
+                    <button class='btn' data-num=></button>
+                </div>
+                <div id='calc-oprbtn'>
+                    <button class='btn' id='btn-clr'>Clear</button>
+                    <button class='btn' id='btn-del'>Delete</button>
+                    <button class='btn' data-opr='divide'>/</button>
+                    <button class='btn' data-opr='multiply'>*</button>
+                    <button class='btn' data-opr='add'>+</button>
+                    <button class='btn' data-opr='subtract'>-</button>
+                    <button class='btn' id='btn-equals'>=</button>
+                </div>
+            </div>
+        </div> 
     </div>
 </body>
 </html>
