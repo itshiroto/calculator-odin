@@ -5,19 +5,21 @@ const clearBtn = document.querySelector('#btn-clr');
 const deleteBtn = document.querySelector('#btn-del')
 const equalsBtn = document.querySelector('#btn-equals')
 
-let firstNum = '';
-let secondNum = '';
-let result = 0;
+let inputNum = '';
+let resultNum = '';
+let resultInt = 0;
 let selectedOpr = '';
 let readyToClear = false;
 
-clearBtn.addEventListener('click', clearButton);
+clearBtn.addEventListener('click', () => {
+    clearAll();
+});
 deleteBtn.addEventListener('click', backspace);
 
 numBtn.forEach((btn) => {
     btn.addEventListener("click", (val) => {
         if (readyToClear === true) {
-            resetNum()
+            resetDisplay();
             readyToClear = false;
         }
         appendText(val.target.dataset.num);
@@ -30,9 +32,12 @@ oprBtn.forEach((btn) => {
     });
 });
 
-equalsBtn.addEventListener("click", equals)
+equalsBtn.addEventListener("click", () => {
+    equals();
+    selectedOpr = '';
+})
 
-// Operator Function
+///////// Operator Function ////////
 function add(a, b) {return a + b;} 
 function subtract(a,b) {return a - b;}
 function multiply(a,b) {return a * b;}
@@ -45,46 +50,40 @@ function operate(opr, a, b) {
 }
 
 function equals() {
-    if (firstNum === '') return
-    result = operate(selectedOpr, parseInt(secondNum), parseInt(firstNum));
-    calcDisplay.value = result;
-    firstNum = '';
-    secondNum = '';
+    if (!selectedOpr) return;
+    resultInt = operate(selectedOpr, parseFloat(resultNum), parseFloat(inputNum));
+    resultNum = resultInt.toString();
+    calcDisplay.value = resultNum;
+    // selectedOpr = '';
+    inputNum = '';
     readyToClear = true;
-}
-
-function resetNum() {
-    calcDisplay.value = '';
-    firstNum = '';
-}
-
-function clearButton() {
-    calcDisplay.value = '';
-    firstNum = '';
-    selectedOpr = '';
-    secondNum = '';
 }
 
 function appendText(val) {
     calcDisplay.value += val;
-    firstNum += val;
+    inputNum += val;
 }
 
 function backspace() {
     calcDisplay.value = calcDisplay.value.slice(0, -1);
-    firstNum = firstNum.slice(0, -1);
+    inputNum = inputNum.slice(0, -1);
 }
 
-function selectOpr(val) {
-    if(!selectedOpr){
-        secondNum = firstNum;
-        selectedOpr = val;
-        readyToClear = true;
-    }
-    else {
-        equals()
-        secondNum = result
-        selectedOpr = val;
-        readyToClear = true;
-    }
+function resetDisplay() {
+    inputNum = '';
+    calcDisplay.value = '';
+}
+
+function clearAll() {
+    resetDisplay();
+    resultInt = 0;
+    resultNum = '';
+    selectedOpr = '';
+}
+
+function selectOpr(opr) {
+    if (selectedOpr) equals();
+    if (inputNum) resultNum = inputNum;
+    selectedOpr = opr;
+    readyToClear = true;
 }
