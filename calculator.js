@@ -4,6 +4,7 @@ const oprBtn = document.querySelectorAll('[data-opr]');
 const clearBtn = document.querySelector('#btn-clr');
 const deleteBtn = document.querySelector('#btn-del')
 const equalsBtn = document.querySelector('#btn-equals')
+const pointBtn = document.querySelector('[data-point]');
 
 let inputNum = '';
 let resultNum = '';
@@ -11,10 +12,9 @@ let resultInt = 0;
 let selectedOpr = '';
 let readyToClear = false;
 
-clearBtn.addEventListener('click', () => {
-    clearAll();
-});
 deleteBtn.addEventListener('click', backspace);
+clearBtn.addEventListener('click', clearAll);
+pointBtn.addEventListener('click', appendPoint)
 
 numBtn.forEach((btn) => {
     btn.addEventListener("click", (val) => {
@@ -42,9 +42,9 @@ function add(a, b) {return a + b;}
 function subtract(a,b) {return a - b;}
 function multiply(a,b) {return a * b;}
 function divide(a,b) {return a / b;}
-
 ///////////////////////////////////
 
+// Main Operate Function
 function operate(opr, a, b) {
     return window[opr](a, b);
 }
@@ -54,7 +54,6 @@ function equals() {
     resultInt = operate(selectedOpr, parseFloat(resultNum), parseFloat(inputNum));
     resultNum = resultInt.toString();
     calcDisplay.value = resultNum;
-    // selectedOpr = '';
     inputNum = '';
     readyToClear = true;
 }
@@ -62,6 +61,13 @@ function equals() {
 function appendText(val) {
     calcDisplay.value += val;
     inputNum += val;
+}
+
+function appendPoint() {
+    if(readyToClear) resetDisplay();
+    if(calcDisplay.value === '') calcDisplay.value += 0;
+    if(calcDisplay.value.includes('.')) return;
+    calcDisplay.value += '.';
 }
 
 function backspace() {
