@@ -5,6 +5,7 @@ const clearBtn = document.querySelector('#btn-clr');
 const deleteBtn = document.querySelector('#btn-del')
 const equalsBtn = document.querySelector('#btn-equals')
 const pointBtn = document.querySelector('[data-point]');
+const historyDisp = document.querySelector('#calc-history')
 
 let inputNum = '';
 let resultNum = '';
@@ -23,6 +24,7 @@ numBtn.forEach((btn) => {
             readyToClear = false;
         }
         appendText(val.target.dataset.num);
+        updateHistory()
     });
 });
 
@@ -65,7 +67,10 @@ function appendText(val) {
 
 function appendPoint() {
     if(readyToClear) resetDisplay();
-    if(calcDisplay.value === '') calcDisplay.value += 0;
+    if(calcDisplay.value === '') {
+        calcDisplay.value += 0;
+        inputNum += '0.';
+    }
     if(calcDisplay.value.includes('.')) return;
     calcDisplay.value += '.';
 }
@@ -78,6 +83,7 @@ function backspace() {
 function resetDisplay() {
     inputNum = '';
     calcDisplay.value = '';
+    historyDisp.innerHTML = '';
 }
 
 function clearAll() {
@@ -92,4 +98,22 @@ function selectOpr(opr) {
     if (inputNum) resultNum = inputNum;
     selectedOpr = opr;
     readyToClear = true;
+}
+function updateHistory(){
+    let opr = '';
+    switch(selectedOpr) {
+        case 'add': 
+            opr = '+';
+            break;
+        case 'subtract':
+            opr = '-';
+            break;
+        case 'multiply':
+            opr = '*';
+            break;
+        case 'divide': 
+            opr = '/';
+            break;
+    }
+    historyDisp.innerHTML = `${resultNum} ${opr} ${inputNum}`
 }
