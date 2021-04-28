@@ -17,12 +17,15 @@ deleteBtn.addEventListener('click', backspace);
 clearBtn.addEventListener('click', clearAll);
 pointBtn.addEventListener('click', appendPoint)
 
+document.addEventListener("keydown", (e) => {
+    resetDisplay();
+    numpadInput(e);
+    updateHistory()
+})
+
 numBtn.forEach((btn) => {
     btn.addEventListener("click", (val) => {
-        if (readyToClear === true) {
-            resetDisplay();
-            readyToClear = false;
-        }
+        resetDisplay();
         appendText(val.target.dataset.num);
         updateHistory()
     });
@@ -31,6 +34,7 @@ numBtn.forEach((btn) => {
 oprBtn.forEach((btn) => {
     btn.addEventListener("click", (val) => {
         selectOpr(val.target.dataset.opr);
+        updateHistory();
     });
 });
 
@@ -38,6 +42,8 @@ equalsBtn.addEventListener("click", () => {
     equals();
     selectedOpr = '';
 })
+
+
 
 ///////// Operator Function ////////
 function add(a, b) {return a + b;} 
@@ -53,6 +59,12 @@ function operate(opr, a, b) {
 
 function equals() {
     if (!selectedOpr) return;
+    if (selectedOpr === 'divide' && inputNum === '0') {
+        calcDisplay.value = "You can't divide by 0!";
+        inputNum = '';
+        readyToClear = true;
+        return;
+    }
     resultInt = operate(selectedOpr, parseFloat(resultNum), parseFloat(inputNum));
     resultNum = resultInt.toString();
     calcDisplay.value = resultNum;
@@ -63,6 +75,14 @@ function equals() {
 function appendText(val) {
     calcDisplay.value += val;
     inputNum += val;
+    limitText();
+}
+
+function limitText() {
+if (calcDisplay.value.length > 14) {
+    calcDisplay.value = calcDisplay.value.slice(0, -1);  
+        inputNum = inputNum.slice(0,-1);
+    }
 }
 
 function appendPoint() {
@@ -75,15 +95,39 @@ function appendPoint() {
     calcDisplay.value += '.';
 }
 
+function numpadInput(input) {
+    let key = input.key;
+    if (key === '.') {
+        appendPoint();
+    } else if (key === 'Backspace') {
+        backspace();
+    } else if (input.keyCode === 13) {
+        input.preventDefault();
+        equalsBtn.click();
+    } else if (key >= 0 && key <= 9) {
+        appendText(key);
+    } else if (/[+-/*]/i.test(key)) {
+        let convertedOpr = '';
+        switch(key){
+            case '+': convertedOpr = 'add'; break;
+            case '-': convertedOpr = 'subtract'; break;
+            case '*': convertedOpr = 'multiply'; break;
+            case '/': convertedOpr = 'divide'; break;
+        }
+        selectOpr(convertedOpr);
+    }
+}
 function backspace() {
     calcDisplay.value = calcDisplay.value.slice(0, -1);
     inputNum = inputNum.slice(0, -1);
 }
 
 function resetDisplay() {
+    if (readyToClear === false) return;
     inputNum = '';
     calcDisplay.value = '';
     historyDisp.innerHTML = '';
+    readyToClear = false;
 }
 
 function clearAll() {
@@ -99,6 +143,7 @@ function selectOpr(opr) {
     selectedOpr = opr;
     readyToClear = true;
 }
+
 function updateHistory(){
     let opr = '';
     switch(selectedOpr) {
@@ -115,5 +160,5 @@ function updateHistory(){
             opr = '/';
             break;
     }
-    historyDisp.innerHTML = `${resultNum} ${opr} ${inputNum}`
+    historyDisp.innerHTML = `${resultNum} ${opr} ${inputNum}`;
 }
