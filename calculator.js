@@ -20,21 +20,18 @@ pointBtn.addEventListener('click', appendPoint)
 document.addEventListener("keydown", (e) => {
     resetDisplay();
     numpadInput(e);
-    updateHistory()
 })
 
 numBtn.forEach((btn) => {
     btn.addEventListener("click", (val) => {
         resetDisplay();
         appendText(val.target.dataset.num);
-        updateHistory()
     });
 });
 
 oprBtn.forEach((btn) => {
     btn.addEventListener("click", (val) => {
         selectOpr(val.target.dataset.opr);
-        updateHistory();
     });
 });
 
@@ -76,6 +73,7 @@ function appendText(val) {
     calcDisplay.value += val;
     inputNum += val;
     limitText();
+    updateHistory();
 }
 
 function limitText() {
@@ -126,11 +124,12 @@ function resetDisplay() {
     if (readyToClear === false) return;
     inputNum = '';
     calcDisplay.value = '';
-    historyDisp.innerHTML = '';
+    historyDisp.innerHTML = '0';
     readyToClear = false;
 }
 
 function clearAll() {
+    readyToClear = true;
     resetDisplay();
     resultInt = 0;
     resultNum = '';
@@ -142,6 +141,7 @@ function selectOpr(opr) {
     if (inputNum) resultNum = inputNum;
     selectedOpr = opr;
     readyToClear = true;
+    updateHistory();
 }
 
 function updateHistory(){
